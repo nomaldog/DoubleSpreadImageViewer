@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>簡易画像ビューワ</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .button-container {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+        }
+        .color-button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            cursor: pointer;
+        }
+        .container {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        .dropzone {
+            width: calc(50% - 5px);
+            height: calc((100vw / 2 - 10px) * (5 / 7));
+            border: 2px dashed #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        .dropzone img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+        }
+        .dropzone::after {
+            content: "ドラッグ＆ドロップ";
+            color: #ffffff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button class="color-button" style="background-color: lightblue;" onclick="changeBackgroundColor('lightblue')"></button>
+        <button class="color-button" style="background-color: #4169E1;" onclick="changeBackgroundColor('#4169E1')"></button> <!-- 落ち着いた青色 -->
+        <button class="color-button" style="background-color: purple;" onclick="changeBackgroundColor('purple')"></button>
+        <button class="color-button" style="background-color: #B22222;" onclick="changeBackgroundColor('#B22222')"></button> <!-- 落ち着いた赤色 -->
+        <button class="color-button" style="background-color: pink;" onclick="changeBackgroundColor('pink')"></button>
+        <button class="color-button" style="background-color: orange;" onclick="changeBackgroundColor('orange')"></button>
+        <button class="color-button" style="background-color: #FFD700;" onclick="changeBackgroundColor('#FFD700')"></button> <!-- 落ち着いた黄色 -->
+        <button class="color-button" style="background-color: green;" onclick="changeBackgroundColor('green')"></button>
+        <button class="color-button" style="background-color: brown;" onclick="changeBackgroundColor('brown')"></button>
+        <button class="color-button" style="background-color: black;" onclick="changeBackgroundColor('black')"></button>
+        <button class="color-button" style="background-color: gray;" onclick="changeBackgroundColor('gray')"></button>
+        <button class="color-button" style="background-color: white;" onclick="changeBackgroundColor('white')"></button>
+    </div>
+    <div class="container">
+        <div class="dropzone" id="dropzone1"></div>
+        <div class="dropzone" id="dropzone2"></div>
+    </div>
+
+    <script>
+        const dropzones = document.querySelectorAll('.dropzone');
+
+        dropzones.forEach(dropzone => {
+            dropzone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#00ff00';
+            });
+
+            dropzone.addEventListener('dragleave', () => {
+                dropzone.style.borderColor = '#ffffff';
+            });
+
+            dropzone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                dropzone.style.borderColor = '#ffffff';
+
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        const img = document.createElement('img');
+                        img.src = reader.result;
+                        dropzone.innerHTML = '';
+                        dropzone.appendChild(img);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+
+        function changeBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+        }
+    </script>
+</body>
+</html>
